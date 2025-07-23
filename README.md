@@ -17,9 +17,7 @@ tin-actix-api-resp 提供了统一的 API 响应结构体 `ApiRes<T>`，支持�
 
 ```toml
 [dependencies]
-tin-actix-api-resp = { path = "." }
-actix-web = "4"
-serde = { version = "1", features = ["derive"] }
+tin-actix-api-resp = { git = "https://gitee.com/J_Tang/tin-actix-api-resp.git" }
 ```
 
 ## 快速开始

@@ -1,9 +1,12 @@
 use serde::Serialize;
 
 pub use crate::macros::ApiRes;
+
 pub type ApiErr = ApiRes<()>;
 pub type ApiResult<T> = Result<ApiRes<T>, ApiErr>;
-pub type ApiPageRes<T> = ApiRes<PageRes<T>>;
+pub type ApiBoolResult = Result<ApiRes<bool>, ApiErr>;
+pub type ApiListResult<T> = Result<ApiRes<Vec<T>>, ApiErr>;
+pub type ApiPageResult<T> = Result<ApiRes<PageRes<T>>, ApiErr>;
 
 #[derive(Serialize, Debug)]
 pub struct PageRes<T> {

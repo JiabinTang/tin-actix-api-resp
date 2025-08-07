@@ -40,9 +40,9 @@ impl From<sea_orm::TransactionError<ApiErr>> for ApiErr {
 }
 
 #[cfg(feature = "redis")]
-impl From<redis::RedisError> for ApiErr {
-    fn from(err: redis::RedisError) -> Self {
-        log::error!(target: "tin_actix_api_resp::error", "[Redis] RedisError: {err:#?}");
+impl From<tin_redis_conn::ConnectionError> for ApiErr {
+    fn from(err: tin_redis_conn::ConnectionError) -> Self {
+        log::error!(target: "tin_actix_api_resp::error", "[Redis] ConnectionError: {err:#?}");
         ApiErr::InternalServerError("Internal server error".into())
     }
 }

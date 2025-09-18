@@ -1,5 +1,5 @@
 use actix_web::http::StatusCode;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 macro_rules! status_codes {
     (
@@ -8,7 +8,7 @@ macro_rules! status_codes {
             ($konst:ident, $code:expr, $status:ident, $message:expr);
         )+
     ) => {
-        #[derive(Debug, Serialize)]
+        #[derive(Debug, Clone, Serialize, Deserialize)]
         pub enum ApiRes<T: Serialize> {
             /// Custom response with status code, error code, message, and optional data
             Custom(u16, u32, String, Option<T>),
@@ -18,6 +18,8 @@ macro_rules! status_codes {
             /// 200 OK with additional status code and message
             /// [[RFC7231, Section 6.3.1](https://tools.ietf.org/html/rfc7231#section-6.3.1)]
             OkWith(u32, String, T),
+            /// 200 OK empty data
+            Empty,
             $(
                 $(#[$docs])*
                 $konst(String),
@@ -31,6 +33,7 @@ macro_rules! status_codes {
                     ApiRes::Custom(status,_, _, _) => StatusCode::from_u16(*status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
                     ApiRes::Ok(_) => StatusCode::OK,
                     ApiRes::OkWith(_, _, _) => StatusCode::OK,
+                    ApiRes::Empty => StatusCode::OK,
                     $(
                         ApiRes::$konst(_) => StatusCode::$status,
                     )+
@@ -42,6 +45,7 @@ macro_rules! status_codes {
                     ApiRes::Custom(_,code, _, _) => *code,
                     ApiRes::Ok(_) => 200,
                     ApiRes::OkWith(code, _, _) => *code,
+                    ApiRes::Empty => 200,
                     $(
                         ApiRes::$konst(_) => $code,
                     )+
@@ -53,6 +57,7 @@ macro_rules! status_codes {
                     ApiRes::Custom(_,_, msg, _) => msg,
                     ApiRes::Ok(_) => "Success",
                     ApiRes::OkWith(_, msg, _) => msg,
+                    ApiRes::Empty => "Success",
                     $(
                         ApiRes::$konst(msg) => msg,
                     )+
@@ -64,6 +69,7 @@ macro_rules! status_codes {
                     ApiRes::Custom(_,_, _, data) => data.as_ref(),
                     ApiRes::Ok(data) => Some(data),
                     ApiRes::OkWith(_, _, data) => Some(data),
+                    ApiRes::Empty => None,
                     _ => None,
                 }
             }

@@ -2478,7 +2478,7 @@ dependencies = [
 
 [[package]]
 name = "tin-actix-api-resp"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "actix-web",
  "chrono",
